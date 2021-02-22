@@ -38,12 +38,33 @@
       form button {
         font-size: 16px;
       }
-      pre {
+      .answers {
         background: lightgreen;
         font-size: 20px;
         padding: 16px;
         white-space: pre-wrap;
         word-wrap: break-word;
+      }
+      .answers ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .answers li {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+        border-bottom: 1px solid #444;
+      }
+      .answers li:last-child {
+        margin-bottom: 0;
+      }
+      .answers button {
+        background: none;
+        border: 0;
+        cursor: pointer;
+        padding: 8px;
       }
     </style>
   </head>
@@ -51,7 +72,7 @@
     <main>
       <h1>Word Game Solver for Mom</h1>
       <p>
-        <strong>Instructions:</strong> Type out the pattern you need to match using asterisks (*) for blanks. Then type out the letters you have and press Enter.
+        <strong>Instructions:</strong> Type out the pattern you need to match using asterisks (*) for blanks. Then type out the letters you have and press Enter. If the word game doesn't accept a word, you can remove it from the dictionary to never see it again.
       </p>
       <form method="post" action="">
         <label>Pattern:
@@ -62,7 +83,7 @@
         </label>
         <button type="submit">Submit</button>
       </form>
-      <pre>Potential answers will appear here.</pre>
+      <div class="answers">Potential answers will appear here.</div>
       <p>
       For example, for the picture below you can type <strong>****o</strong> or <strong>**o*</strong> for the pattern and <strong>tortsid</strong> for the letters.
       </p>

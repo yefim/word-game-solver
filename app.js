@@ -1,6 +1,7 @@
 const $form = document.querySelector('form');
-const $answers = document.querySelector('pre');
+const $answers = document.querySelector('.answers');
 const words = JSON.parse(document.querySelector('#words').innerHTML);
+const removedWords = new Set(JSON.parse(localStorage.getItem('removed-words') || '[]'));
 
 // Checks if word can be spelled with the specified letter hash
 const canSpell = (word, letterHash) => {
@@ -38,7 +39,7 @@ const solve = (input, letters) => {
   const letterHash = generateHash(letters);
 
   return words.filter((word) => {
-    return word.length === input.length && or(word, input) && canSpell(word, letterHash);
+    return !removedWords.has(word) && word.length === input.length && or(word, input) && canSpell(word, letterHash);
   });
 };
 
@@ -48,5 +49,32 @@ $form.addEventListener('submit', (e) => {
   const pattern = e.target.pattern.value.toLowerCase();
   const letters = e.target.letters.value.toLowerCase();
 
-  $answers.innerHTML = solve(pattern, letters);
+  const words = solve(pattern, letters);
+
+  const $ul = document.createElement('ul');
+
+  for (const word of words) {
+    const $li = document.createElement('li');
+    const $word = document.createTextNode(word);
+    const $button = document.createElement('button');
+    $button.textContent = String.fromCodePoint(0x274C);
+    const onClick = () => {
+      if (confirm(`Are you sure you want to remove "${word}" from the dictionary?`)) {
+        $button.removeEventListener('click', onClick);
+        $ul.removeChild($li);
+        removedWords.add(word);
+        localStorage.setItem('removed-words', JSON.stringify([...removedWords]));
+      }
+    }
+    $button.addEventListener('click', onClick);
+
+    $li.appendChild($word);
+    $li.appendChild($button);
+    $ul.appendChild($li);
+  }
+
+  while ($answers.lastChild) {
+    $answers.removeChild($answers.lastChild);
+  }
+  $answers.appendChild($ul);
 });
