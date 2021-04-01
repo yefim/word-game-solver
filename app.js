@@ -1,7 +1,12 @@
 const $form = document.querySelector('form');
 const $answers = document.querySelector('.answers');
+const $removed = document.querySelector('.removed');
 const words = JSON.parse(document.querySelector('#words').innerHTML);
 const removedWords = new Set(JSON.parse(localStorage.getItem('removed-words') || '[]'));
+
+for (const word of removedWords) {
+  addRemovedWord(word);
+}
 
 // Checks if word can be spelled with the specified letter hash
 const canSpell = (word, letterHash) => {
@@ -43,6 +48,12 @@ const solve = (input, letters) => {
   });
 };
 
+function addRemovedWord(word) {
+  const $li = document.createElement('li');
+  $li.innerText = word;
+  $removed.appendChild($li);
+}
+
 $form.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -63,6 +74,7 @@ $form.addEventListener('submit', (e) => {
         $button.removeEventListener('click', onClick);
         $ul.removeChild($li);
         removedWords.add(word);
+        addRemovedWord(word);
         localStorage.setItem('removed-words', JSON.stringify([...removedWords]));
       }
     }
